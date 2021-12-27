@@ -16,34 +16,67 @@ const useThemeState = () => {
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
 
-  const storage = localStorage;
+  function storageAvailable(type) {
+    try {
+      const storage = window[type];
+      const x = '__storage_test__';
+      storage.setItem(x, x);
+      storage.removeItem(x);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
-  const handleSetTheme = (newTheme) => {
-    setTheme(newTheme);
-    storage.setItem('theme', newTheme);
-  };
+  if (storageAvailable('localStorage')) {
+    const storage = localStorage;
 
-  useEffect(() => {
-    const storageTheme = storage.getItem('theme');
+    const handleSetTheme = (newTheme) => {
+      setTheme(newTheme);
+      storage.setItem('theme', newTheme);
+    };
 
-    return storageTheme
-      ? setTheme(storageTheme)
-      : storage.setItem('theme', 'light');
-  }, []);
+    useEffect(() => {
+      const storageTheme = storage.getItem('theme');
 
-  const stateValue = useMemo(
-    () => ({
-      theme,
-      handleSetTheme,
-    }),
-    [theme, handleSetTheme],
-  );
+      return storageTheme
+        ? setTheme(storageTheme)
+        : storage.setItem('theme', 'light');
+    }, []);
 
-  return (
-    <ThemeStateContext.Provider value={stateValue}>
-      <div className={`sticky-footer theme-${theme}`}>{children}</div>
-    </ThemeStateContext.Provider>
-  );
+    const stateValue = useMemo(
+      () => ({
+        theme,
+        handleSetTheme,
+      }),
+      [theme, handleSetTheme],
+    );
+
+    return (
+      <ThemeStateContext.Provider value={stateValue}>
+        <div className={`sticky-footer theme-${theme}`}>{children}</div>
+      </ThemeStateContext.Provider>
+    );
+    // eslint-disable-next-line no-else-return
+  } else {
+    const handleSetTheme = (newTheme) => {
+      setTheme(newTheme);
+    };
+
+    const stateValue = useMemo(
+      () => ({
+        theme,
+        handleSetTheme,
+      }),
+      [theme, handleSetTheme],
+    );
+
+    return (
+      <ThemeStateContext.Provider value={stateValue}>
+        <div className={`sticky-footer theme-${theme}`}>{children}</div>
+      </ThemeStateContext.Provider>
+    );
+  }
 };
 
 ThemeProvider.propTypes = {
