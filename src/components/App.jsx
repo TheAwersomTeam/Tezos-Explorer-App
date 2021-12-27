@@ -12,20 +12,23 @@ import { NetworkProvider } from '../contexts/networkContext';
 import { BlocksProvider } from '../contexts/blocksContext';
 import { BlockProvider } from '../contexts/blockContext';
 import { ThemeProvider } from '../contexts/themeContext';
+import { APIProvider } from '../api/contextAPI';
 
 const App = () => (
   <ThemeProvider>
     <ToastContainer />
     <NetworkProvider>
-      <BlocksProvider>
-        <BlockProvider>
-          <Router>
-            <Header />
-            <AppRouter />
-            <Footer />
-          </Router>
-        </BlockProvider>
-      </BlocksProvider>
+      <APIProvider>
+        <BlocksProvider>
+          <BlockProvider>
+            <Router>
+              <Header />
+              <AppRouter />
+              <Footer />
+            </Router>
+          </BlockProvider>
+        </BlocksProvider>
+      </APIProvider>
     </NetworkProvider>
   </ThemeProvider>
 );
