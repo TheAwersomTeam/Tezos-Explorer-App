@@ -37,6 +37,7 @@ const transformBlockData = (block) => {
     },
   } = block;
 
+  const mutez = 1000000;
   const newDate = new Date(timestamp * 1000);
   const date = transformDate(newDate);
 
@@ -45,12 +46,12 @@ const transformBlockData = (block) => {
     hash: isDummy(hash),
     timestamp: isDummy(date),
     baker: isDummy(bakerName),
-    fees: isDummy(fees / 1000000),
+    fees: isDummy(fees / mutez),
     priority: isDummy(priority),
-    volume: isDummy(volume / 1000000),
+    volume: isDummy(volume / mutez),
     blockTime: isDummy(blockTime),
     fitness: isDummy(fitness),
-    gas: isDummy(consumedGas / 1000000),
+    gas: isDummy(consumedGas / mutez),
     protocol: isDummy(protocol),
     cycle: isDummy(metaCycle),
     cyclePosition: isDummy(metaCyclePosition),
