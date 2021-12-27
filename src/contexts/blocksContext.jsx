@@ -1,17 +1,17 @@
 import { createContext, useContext, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { getBlocks, getHead } from '../api';
 import transformDate from '../utils/transformDate';
 import isDummy from '../utils/isDummy';
 import { handleError } from '../utils/errorsHandler';
+import { useAPIState } from '../api/contextAPI';
 
 const BlocksStateContext = createContext([]);
 BlocksStateContext.displayName = 'Blocks Context';
 const useBlocksState = () => {
   const context = useContext(BlocksStateContext);
 
-  if (!context) {
+  if (context.length === 0) {
     throw new Error('useBlocksState must be used within a BlocksProvider');
   }
 
@@ -30,6 +30,7 @@ const transformBlocksData = (blocks) =>
       endorsements,
     } = block;
 
+    const MUTEZ = 1000000;
     const newDate = new Date(block.timestamp * 1000);
     const date = transformDate(newDate);
 
@@ -39,8 +40,8 @@ const transformBlocksData = (blocks) =>
       timestamp: isDummy(date),
       priority: isDummy(priority),
       numOfOperations: isDummy(number_of_operations),
-      volume: isDummy(volume / 1000000),
-      fees: isDummy(fees / 1000000),
+      volume: isDummy(volume / MUTEZ),
+      fees: isDummy(fees / MUTEZ),
       endorsements: isDummy(endorsements),
     };
   });
@@ -50,6 +51,8 @@ const BlocksProvider = ({ children }) => {
   const [total, setTotal] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  const { getBlocks, getHead } = useAPIState();
 
   const handleBlocks = async (offset, limit) => {
     setIsError(false);

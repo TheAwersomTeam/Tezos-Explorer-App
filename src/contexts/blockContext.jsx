@@ -1,17 +1,17 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { getBlock, getHead } from '../api';
 import transformDate from '../utils/transformDate';
 import isDummy from '../utils/isDummy';
 import { handleError } from '../utils/errorsHandler';
+import { useAPIState } from '../api/contextAPI';
 
-const BlockStateContext = createContext([]);
+const BlockStateContext = createContext({});
 BlockStateContext.displayName = 'Block Context';
 const useBlockState = () => {
   const context = useContext(BlockStateContext);
 
-  if (context.length === 0) {
+  if (Object.keys(context).length === 0) {
     throw new Error('BlockStateContext must be used within a BlockProvider');
   }
 
@@ -63,6 +63,8 @@ const BlockProvider = ({ children }) => {
   const [total, setTotal] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  const { getBlock, getHead } = useAPIState();
 
   const handleBlock = async (id) => {
     setIsError(false);

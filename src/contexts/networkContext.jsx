@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
-
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 const NetworkStateContext = createContext('');
 NetworkStateContext.displayName = 'Network Context';
@@ -18,20 +17,26 @@ const useNetworkState = () => {
 const NetworkProvider = ({ children }) => {
   const [network, setNetwork] = useState('mainnet');
 
-  const storage = sessionStorage;
+  let handleSetNetwork;
 
-  const handleSetNetwork = (newNetwork) => {
-    setNetwork(newNetwork);
-    storage.setItem('network', newNetwork);
-  };
+  try {
+    const storage = localStorage;
 
-  useEffect(() => {
-    const storageNetwork = storage.getItem('network');
+    handleSetNetwork = (newNetwork) => {
+      setNetwork(newNetwork);
+      storage.setItem('network', newNetwork);
+    };
 
-    return storageNetwork
-      ? setNetwork(storageNetwork)
-      : storage.setItem('network', 'mainnet');
-  }, []);
+    useEffect(() => {
+      const storageNetwork = storage.getItem('network');
+
+      return storageNetwork
+        ? setNetwork(storageNetwork)
+        : storage.setItem('network', 'mainnet');
+    }, []);
+  } catch {
+    handleSetNetwork = (newNetwork) => setNetwork(newNetwork);
+  }
 
   const stateValue = useMemo(
     () => ({
