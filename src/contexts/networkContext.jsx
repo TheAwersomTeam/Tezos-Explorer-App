@@ -2,17 +2,10 @@ import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 const NetworkStateContext = createContext('');
-NetworkStateContext.displayName = 'Network Context';
+NetworkStateContext.displayName = 'NetworkStateContext';
 
-const useNetworkState = () => {
-  const context = useContext(NetworkStateContext);
-
-  if (!context) {
-    throw new Error('useNetworkState must be used within a NetworkProvider');
-  }
-
-  return context;
-};
+const NetworkDispatchContext = createContext('');
+NetworkDispatchContext.displayName = 'NetworkDispatchContext';
 
 const NetworkProvider = ({ children }) => {
   const [network, setNetwork] = useState('mainnet');
@@ -41,14 +34,22 @@ const NetworkProvider = ({ children }) => {
   const stateValue = useMemo(
     () => ({
       network,
+    }),
+    [network],
+  );
+
+  const dispatchValue = useMemo(
+    () => ({
       handleSetNetwork,
     }),
-    [network, handleSetNetwork],
+    [handleSetNetwork],
   );
 
   return (
     <NetworkStateContext.Provider value={stateValue}>
-      {children}
+      <NetworkDispatchContext.Provider value={dispatchValue}>
+        {children}
+      </NetworkDispatchContext.Provider>
     </NetworkStateContext.Provider>
   );
 };
@@ -57,4 +58,24 @@ NetworkProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { useNetworkState, NetworkProvider };
+const useNetworkStateContext = () => {
+  const context = useContext(NetworkStateContext);
+
+  if (!context) {
+    throw new Error('useNetworkState must be used within a NetworkProvider');
+  }
+
+  return context;
+};
+
+const useNetworkDispatchContext = () => {
+  const context = useContext(NetworkDispatchContext);
+
+  if (!context) {
+    throw new Error('useNetworkState must be used within a NetworkProvider');
+  }
+
+  return context;
+};
+
+export { useNetworkStateContext, useNetworkDispatchContext, NetworkProvider };

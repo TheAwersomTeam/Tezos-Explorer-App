@@ -4,19 +4,13 @@ import PropTypes from 'prop-types';
 import transformDate from '../utils/transformDate';
 import isDummy from '../utils/isDummy';
 import { handleError } from '../utils/errorsHandler';
-import { useAPIState } from '../api/contextAPI';
+import { useAPIDispatchContext } from '../api/contextAPI';
 
-const BlockStateContext = createContext({});
-BlockStateContext.displayName = 'Block Context';
-const useBlockState = () => {
-  const context = useContext(BlockStateContext);
+const BlockStateContext = createContext('');
+BlockStateContext.displayName = 'BlockStateContext';
 
-  if (Object.keys(context).length === 0) {
-    throw new Error('BlockStateContext must be used within a BlockProvider');
-  }
-
-  return context;
-};
+const BlockDispatchContext = createContext('');
+BlockDispatchContext.displayName = 'BlockDispatchContext';
 
 const transformBlockData = (block) => {
   const {
@@ -64,7 +58,7 @@ const BlockProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  const { getBlock, getHead } = useAPIState();
+  const { getBlock, getHead } = useAPIDispatchContext();
 
   const handleBlock = async (id) => {
     setIsError(false);
@@ -83,20 +77,29 @@ const BlockProvider = ({ children }) => {
     }
   };
 
-  const blockValue = useMemo(
+  const stateValue = useMemo(
     () => ({
       block,
       total,
-      handleBlock,
+
       isLoading,
       isError,
     }),
-    [block, handleBlock, isLoading, isError],
+    [block, isLoading, isError],
+  );
+
+  const dispatchValue = useMemo(
+    () => ({
+      handleBlock,
+    }),
+    [handleBlock],
   );
 
   return (
-    <BlockStateContext.Provider value={blockValue}>
-      {children}
+    <BlockStateContext.Provider value={stateValue}>
+      <BlockDispatchContext.Provider value={dispatchValue}>
+        {children}
+      </BlockDispatchContext.Provider>
     </BlockStateContext.Provider>
   );
 };
@@ -105,4 +108,28 @@ BlockProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { useBlockState, BlockProvider };
+const useBlockStateContext = () => {
+  const context = useContext(BlockStateContext);
+
+  if (!context) {
+    throw new Error(
+      'useBlockDispatchContext must be used within a BlockProvider',
+    );
+  }
+
+  return context;
+};
+
+const useBlockDispatchContext = () => {
+  const context = useContext(BlockDispatchContext);
+
+  if (!context) {
+    throw new Error(
+      'useBlockDispatchContext must be used within a BlockProvider',
+    );
+  }
+
+  return context;
+};
+
+export { useBlockStateContext, useBlockDispatchContext, BlockProvider };

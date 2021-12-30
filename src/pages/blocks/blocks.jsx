@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useBlocksState } from '../../contexts/blocksContext';
+import {
+  useBlocksStateContext,
+  useBlocksDispatchContext,
+} from '../../contexts/blocksContext';
 import useCurrentLocation from '../../hooks/useCurrentLocation';
 import addUnit from '../../utils/addUnit';
 
@@ -63,7 +66,8 @@ const byField = (field) => (a, b) => {
 };
 
 const Blocks = () => {
-  const { blocks, handleBlocks, total, isError, isLoading } = useBlocksState();
+  const { blocks, total, isError, isLoading } = useBlocksStateContext();
+  const { handleBlocks } = useBlocksDispatchContext();
   const [limit, setLimit] = useState('15');
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState({
