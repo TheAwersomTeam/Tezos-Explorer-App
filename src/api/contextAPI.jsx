@@ -2,24 +2,14 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { createContext, useContext, useMemo } from 'react';
-import { useNetworkState } from '../contexts/networkContext';
+import { useNetworkStateContext } from '../contexts/networkContext';
 
-const APIStateContext = createContext('');
-APIStateContext.displayName = 'API Context';
-
-const useAPIState = () => {
-  const context = useContext(APIStateContext);
-
-  if (!context) {
-    throw new Error('useAPIState must be used within a APIProvider');
-  }
-
-  return context;
-};
+const APIDispatchContext = createContext('');
+APIDispatchContext.displayName = 'APIDispatchContext';
 
 const APIProvider = ({ children }) => {
   const tezTrackerAPI = axios.create({});
-  const { network } = useNetworkState();
+  const { network } = useNetworkStateContext();
 
   tezTrackerAPI.interceptors.request.use((req) => {
     req.baseURL = `https://api.teztracker.com/v2/data/tezos/${network}`;
@@ -33,7 +23,7 @@ const APIProvider = ({ children }) => {
 
   const getHead = () => tezTrackerAPI.get(`/blocks/head`);
 
-  const stateValue = useMemo(
+  const dispatchValue = useMemo(
     () => ({
       getBlocks,
       getBlock,
@@ -43,9 +33,9 @@ const APIProvider = ({ children }) => {
   );
 
   return (
-    <APIStateContext.Provider value={stateValue}>
+    <APIDispatchContext.Provider value={dispatchValue}>
       {children}
-    </APIStateContext.Provider>
+    </APIDispatchContext.Provider>
   );
 };
 
@@ -53,4 +43,14 @@ APIProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { useAPIState, APIProvider };
+const useAPIDispatchContext = () => {
+  const context = useContext(APIDispatchContext);
+
+  if (!context) {
+    throw new Error('useAPIState must be used within a APIProvider');
+  }
+
+  return context;
+};
+
+export { useAPIDispatchContext, APIProvider };

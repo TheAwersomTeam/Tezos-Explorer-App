@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import styles from './BlockInfo.module.scss';
-import { useBlockState } from '../../../contexts/blockContext';
+import { useBlockStateContext } from '../../../contexts/blockContext';
 import Loader from '../../shared/Loader';
 
 const BlockInfo = ({ headers, block }) => {
-  const { isLoading } = useBlockState();
+  const { isLoading } = useBlockStateContext();
 
   return (
     <div className={styles['block-info']}>

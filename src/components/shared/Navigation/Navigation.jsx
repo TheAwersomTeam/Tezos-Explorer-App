@@ -2,8 +2,14 @@ import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 
 import styles from './Navigation.module.scss';
-import { useThemeState } from '../../../contexts/themeContext';
-import { useNetworkState } from '../../../contexts/networkContext';
+import {
+  useThemeStateContext,
+  useThemeDispatchContext,
+} from '../../../contexts/themeContext';
+import {
+  useNetworkStateContext,
+  useNetworkDispatchContext,
+} from '../../../contexts/networkContext';
 
 import { ReactComponent as Home } from '../../../images/home.svg';
 import { ReactComponent as Blocks } from '../../../images/block.svg';
@@ -34,8 +40,10 @@ const ASIDE_CONFIG = [
 ];
 
 const Navigation = ({ isAside }) => {
-  const { theme, handleSetTheme } = useThemeState();
-  const { network, handleSetNetwork } = useNetworkState();
+  const { theme } = useThemeStateContext();
+  const { handleSetTheme } = useThemeDispatchContext();
+  const { network } = useNetworkStateContext();
+  const { handleSetNetwork } = useNetworkDispatchContext();
   const history = useHistory();
 
   const toggleTheme = () =>

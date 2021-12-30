@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import Title from '../../shared/Title';
 import styles from './BlockTitle.module.scss';
-import { useBlockState } from '../../../contexts/blockContext';
+import { useBlockStateContext } from '../../../contexts/blockContext';
 import useCurrentLocation from '../../../hooks/useCurrentLocation';
 
 const BlockTitle = () => {
   const {
     block: { level },
     total,
-  } = useBlockState();
+  } = useBlockStateContext();
 
   const { title } = useCurrentLocation();
 

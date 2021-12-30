@@ -2,17 +2,10 @@ import { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const ThemeStateContext = createContext('');
-ThemeStateContext.displayName = 'Theme Context';
+ThemeStateContext.displayName = 'ThemeStateContext';
 
-const useThemeState = () => {
-  const context = useContext(ThemeStateContext);
-
-  if (!context) {
-    throw new Error('ThemeStateContext must be used within a ThemeProvider');
-  }
-
-  return context;
-};
+const ThemeDispatchContext = createContext('');
+ThemeDispatchContext.displayName = 'ThemeDispatchContext';
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
@@ -41,14 +34,22 @@ const ThemeProvider = ({ children }) => {
   const stateValue = useMemo(
     () => ({
       theme,
+    }),
+    [theme],
+  );
+
+  const dispatchValue = useMemo(
+    () => ({
       handleSetTheme,
     }),
-    [theme, handleSetTheme],
+    [handleSetTheme],
   );
 
   return (
     <ThemeStateContext.Provider value={stateValue}>
-      <div className={`sticky-footer theme-${theme}`}>{children}</div>
+      <ThemeDispatchContext.Provider value={dispatchValue}>
+        <div className={`sticky-footer theme-${theme}`}>{children}</div>
+      </ThemeDispatchContext.Provider>
     </ThemeStateContext.Provider>
   );
 };
@@ -57,4 +58,24 @@ ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { useThemeState, ThemeProvider };
+const useThemeStateContext = () => {
+  const context = useContext(ThemeStateContext);
+
+  if (!context) {
+    throw new Error('ThemeStateContext must be used within a ThemeProvider');
+  }
+
+  return context;
+};
+
+const useThemeDispatchContext = () => {
+  const context = useContext(ThemeDispatchContext);
+
+  if (!context) {
+    throw new Error('ThemeStateContext must be used within a ThemeProvider');
+  }
+
+  return context;
+};
+
+export { useThemeStateContext, useThemeDispatchContext, ThemeProvider };

@@ -2,7 +2,10 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router';
 
 import addUnit from '../utils/addUnit';
-import { useBlockState } from '../contexts/blockContext';
+import {
+  useBlockStateContext,
+  useBlockDispatchContext,
+} from '../contexts/blockContext';
 
 import Breadcrumbs from '../components/shared/Breadcrumbs';
 import BlockInfo from '../components/block/BlockInfo';
@@ -58,8 +61,8 @@ const HEADERS = [
 
 const Block = () => {
   const { id } = useParams();
-
-  const { block, handleBlock, isError } = useBlockState();
+  const { block, isError } = useBlockStateContext();
+  const { handleBlock } = useBlockDispatchContext();
 
   useEffect(() => handleBlock(id), [id]);
 
