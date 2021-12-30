@@ -62,7 +62,9 @@ const useNetworkStateContext = () => {
   const context = useContext(NetworkStateContext);
 
   if (!context) {
-    throw new Error('useNetworkState must be used within a NetworkProvider');
+    throw new Error(
+      'useNetworkStateContext must be used within a NetworkProvider',
+    );
   }
 
   return context;
@@ -72,7 +74,9 @@ const useNetworkDispatchContext = () => {
   const context = useContext(NetworkDispatchContext);
 
   if (!context) {
-    throw new Error('useNetworkState must be used within a NetworkProvider');
+    throw new Error(
+      'useNetworkDispatchContext must be used within a NetworkProvider',
+    );
   }
 
   return context;

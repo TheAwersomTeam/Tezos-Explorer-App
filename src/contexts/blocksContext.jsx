@@ -99,7 +99,9 @@ const useBlocksStateContext = () => {
   const context = useContext(BlocksStateContext);
 
   if (context.length === 0) {
-    throw new Error('useBlocksState must be used within a BlocksProvider');
+    throw new Error(
+      'useBlocksStateContext must be used within a BlocksProvider',
+    );
   }
 
   return context;
@@ -109,7 +111,9 @@ const useBlocksDispatchContext = () => {
   const context = useContext(BlocksDispatchContext);
 
   if (context.length === 0) {
-    throw new Error('useBlocksState must be used within a BlocksProvider');
+    throw new Error(
+      'useBlocksDispatchContext must be used within a BlocksProvider',
+    );
   }
 
   return context;

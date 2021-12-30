@@ -47,7 +47,7 @@ const useAPIDispatchContext = () => {
   const context = useContext(APIDispatchContext);
 
   if (!context) {
-    throw new Error('useAPIState must be used within a APIProvider');
+    throw new Error('useAPIDispatchContext must be used within a APIProvider');
   }
 
   return context;

@@ -62,7 +62,7 @@ const useThemeStateContext = () => {
   const context = useContext(ThemeStateContext);
 
   if (!context) {
-    throw new Error('ThemeStateContext must be used within a ThemeProvider');
+    throw new Error('useThemeStateContext must be used within a ThemeProvider');
   }
 
   return context;
@@ -72,7 +72,9 @@ const useThemeDispatchContext = () => {
   const context = useContext(ThemeDispatchContext);
 
   if (!context) {
-    throw new Error('ThemeStateContext must be used within a ThemeProvider');
+    throw new Error(
+      'useThemeDispatchContext must be used within a ThemeProvider',
+    );
   }
 
   return context;

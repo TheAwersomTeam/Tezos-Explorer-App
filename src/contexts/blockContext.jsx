@@ -112,9 +112,7 @@ const useBlockStateContext = () => {
   const context = useContext(BlockStateContext);
 
   if (!context) {
-    throw new Error(
-      'useBlockDispatchContext must be used within a BlockProvider',
-    );
+    throw new Error('useBlockStateContext must be used within a BlockProvider');
   }
 
   return context;
