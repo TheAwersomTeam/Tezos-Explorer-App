@@ -8,12 +8,10 @@ const APIDispatchContext = createContext('');
 APIDispatchContext.displayName = 'APIDispatchContext';
 
 const APIProvider = ({ children }) => {
-  const tezTrackerAPI = axios.create({});
   const { network } = useNetworkStateContext();
 
-  tezTrackerAPI.interceptors.request.use((req) => {
-    req.baseURL = `https://api.teztracker.com/v2/data/tezos/${network}`;
-    return req;
+  const tezTrackerAPI = axios.create({
+    baseURL: `https://api.teztracker.com/v2/data/tezos/${network}`,
   });
 
   const getBlocks = (offset = 0, limit = 15) =>
